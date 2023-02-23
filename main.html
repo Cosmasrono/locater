@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=5.0">
+  <title>Document</title>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+   <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+  <button id="find-me">Show my location</button><br />
+  <p id="status"></p>
+  <div id="map" style="height:700px" > this is my location</div>
+
+  <script>
+    function geoFindMe() {
+      const status = document.querySelector('#status');
+      const map = L.map('map');
+
+
+      function success(position) {
+  const latitude = position.coords.latitude;
+  const longitude = position.coords.longitude;
+
+  status.textContent = '';
+  const senderLatLng = L.latLng(latitude, longitude);
+  map.setView(senderLatLng, 16);
+  L.marker(senderLatLng).addTo(map);
+
+  map.on('click', function(e) {
+    const clickedLatLng = e.latlng;
+    L.marker(clickedLatLng).addTo(map);
+    const distance = senderLatLng.distanceTo(clickedLatLng);
+    console.log(`Distance from sender's location: ${distance} meters`);
+  });
+}
+
+
+      function success(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        status.textContent = '';
+        map.setView([latitude, longitude], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+          maxZoom: 20,
+        }).addTo(map);
+        L.marker([latitude, longitude]).addTo(map);
+      }
+function success(position) {
+  const latitude = position.coords.latitude;
+  const longitude = position.coords.longitude;
+
+  status.textContent = '';
+  const senderLatLng = L.latLng(latitude, longitude);
+  map.setView(senderLatLng, 16);
+  L.marker(senderLatLng).addTo(map);
+
+  map.on('click', function(e) {
+    const clickedLatLng = e.latlng;
+    L.marker(clickedLatLng).addTo(map);
+    const distance = senderLatLng.distanceTo(clickedLatLng);
+    console.log(`Distance from sender's location: ${distance} meters`);
+  });
+}
+
+
+      function error() {
+        status.textContent = 'Unable to retrieve your location';
+      }
+
+      if (!navigator.geolocation) {
+        status.textContent = 'Geolocation is not supported by your browser';
+      } else {
+        status.textContent = 'Locating...';
+        navigator.geolocation.getCurrentPosition(success, error);
+      }
+    }
+
+    document.querySelector('#find-me').addEventListener('click', geoFindMe);
+  </script>
+</body>
+</html>
